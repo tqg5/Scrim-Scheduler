@@ -13,7 +13,7 @@ export default async function Authorize () {
       code: 'query code',
       scope: 'identify guilds',
       grant_type: 'authorization_code',
-      redirect_uri: encodeURI('http://localhost/oauth2'),
+      redirect_uri: encodeURI('https://treygaines.com/Scrim-Scheduler/oauth2'),
       state: 1
     }
   })
