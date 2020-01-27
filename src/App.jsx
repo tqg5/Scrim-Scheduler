@@ -7,18 +7,13 @@ import {
   Link
 } from 'react-router-dom'
 import Home from './Home'
-import OAuth2 from './components/OAuth2'
-debugger
+
 const App = () => (
   <Router>
     <Route exact path='/Scrim-Scheduler' component={Home} />
-    <Route path='/Scrim-Scheduler/oauth2' component={OAuth2} />
     <ul>
       <li>
-        <Link to='/Scrim-Scheduler'>Home</Link>
-      </li>
-      <li>
-        <Link to='/Scrim-Scheduler/oauth2'>OAuth2</Link>
+        <a href='https://discordapp.com/api/oauth2/authorize?client_id=668288993858945044&redirect_uri=http%3A%2F%2Flocalhost%3A5001%2FgetToken&response_type=code&scope=guilds%20identify'>Home</a>
       </li>
     </ul>
 

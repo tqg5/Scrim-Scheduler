@@ -12,7 +12,7 @@ module.exports = {
       html: {
         title: 'Scrim-Scheduler'
       },
-      publicPath: './',
+      publicPath: '/',
       devServer: {
         historyApiFallback: true
       }
