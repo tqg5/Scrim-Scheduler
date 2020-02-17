@@ -1,0 +1,8 @@
+{
+  "clientID": "668288993858945044",
+  "clientSecret": "eRnBbuU81EkBWLDiZBn3jjLVklEF5nHL",
+  "discordURL": "https://discordapp.com/api/v6",
+  "dbConnection": "mongodb://localhost:27017",
+  "scheduleWebhook": "https://discordapp.com/api/webhooks/675164045082624010/blgt9ne5tzOHEYTzrLU3M54Slgle6SGctAide4-mAY-FQowHKSApUbnSOKVzoTyVOV30",
+  "discordAPIVersion": "6"
+}
