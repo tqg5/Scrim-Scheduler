@@ -25,9 +25,6 @@ const App = () => (
       <li>
         <a href='http://localhost:5001/getGateway'>Get Gateway</a>
       </li>
-      <li>
-        <Button type='primary' onClick={getWebsocket}> Get Websocket </Button>
-      </li>
     </ul>
 
   </Router>

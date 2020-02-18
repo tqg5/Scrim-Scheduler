@@ -4,12 +4,8 @@ const config = require('../../config.json')
 const createXHR = require('../../src/helpers/xhr')
 const differenceInSeconds = require('date-fns/differenceInSeconds')
 const rax = require('retry-axios')
-let db = null
-require('../database').then(database => {
-  db = database
-})
 
-module.exports = app => {
+module.exports = (app, db) => {
   app.get('/getToken', (req, res) => {
     console.log('getToken')
 

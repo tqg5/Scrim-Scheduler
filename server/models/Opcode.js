@@ -1,4 +1,4 @@
-function Opcode() {
+module.exports = (function Opcode() {
   const opcode1 = function(seq = null) {
     return JSON.stringify({
       op: 1,
@@ -9,6 +9,4 @@ function Opcode() {
   return {
     opcode1
   }
-}
-
-export default Opcode()
+})()

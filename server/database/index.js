@@ -1,5 +1,5 @@
 const MongoClient = require('mongodb').MongoClient
-const config = require('../config.json')
+const config = require('../../config.json')
 
 const promise = new Promise((resolve, reject) => {
   MongoClient.connect(config.dbConnection, function(e, database) {

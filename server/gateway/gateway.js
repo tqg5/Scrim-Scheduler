@@ -4,7 +4,7 @@ require('../database').then(database => {
   db = database
 })
 
-module.exports = app => {
+module.exports = (app, db) => {
   app.get('/getGateway', (req, res) => {
     createXHR().get('/gateway')
       .then(({data}) => {

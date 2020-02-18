@@ -1,9 +1,9 @@
-import config from '../../../config.json'
-import Opcode from './Opcode'
+const config = require('../../config.json')
+const Opcode = require('./Opcode')
 
 var WebSocketClient = require('websocket').w3cwebsocket
 
-export default function Websocket(url, msg) {
+module.exports = function Websocket(url, msg) {
   let seq = null
   let op1IntervalID = null
 
@@ -25,6 +25,7 @@ export default function Websocket(url, msg) {
     client.onclose = function(close) {
       console.log('echo-protocol Connection Closed',close)
     }
+
     client.onmessage = function(e) {
       console.log('received message:',e)
       if(e.type === 'message') {
