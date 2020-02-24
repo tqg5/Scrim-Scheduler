@@ -19,6 +19,7 @@
     "cors": "^2.8.5",
     "date-fns": "^2.9.0",
     "discord-oauth2": "^2.0.2",
+    "discord.js": "^11.5.1",
     "express": "^4.17.1",
     "install": "^0.13.0",
     "mongodb": "^3.5.2",

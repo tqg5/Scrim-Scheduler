@@ -1,23 +1,15 @@
 const createXHR = require('../../src/helpers/xhr')
-let db = null
-require('../database').then(database => {
-  db = database
-})
 
 module.exports = (app, db) => {
-  app.get('/getGateway', (req, res) => {
-    createXHR().get('/gateway')
-      .then(({data}) => {
-        db.collection('WSS').findOneAndReplace({}, data)
-          .then(val => {
-            console.log('val:',val)
-            if(!val.value) {
-              db.collection('WSS').insertOne(data)
-            }
-
-            res.json(data)
-          })
-        console.log(data)
-      })
-  })
+  app.get('/refreshGateway', async (req, res) => {
+    const { data } = await createXHR().get('/gateway')
+    console.log('data:',data)
+    const { value } = await db.collection('WSS').findOneAndReplace({}, data)
+    console.log('gateway:',value)
+    if(!value) {
+      db.collection('WSS').insertOne(data)
+    }
+    res.status(200)
+    res.json({})
+  })       
 }

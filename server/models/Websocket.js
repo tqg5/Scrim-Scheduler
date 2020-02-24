@@ -1,11 +1,15 @@
 const config = require('../../config.json')
 const Opcode = require('./Opcode')
+const differenceInMilliseconds = require('date-fns/differenceInMilliseconds')
 
 var WebSocketClient = require('websocket').w3cwebsocket
 
-module.exports = function Websocket(url, msg) {
+module.exports = function Websocket(url, db) {
+  const opcode = Opcode(db)
   let seq = null
   let op1IntervalID = null
+  let lastHeartbeat = null
+  let hearbeatInterval = true
 
   const prom = new Promise((res, rej) => {
     url = `${url}/?v=${config.discordAPIVersion}&encoding=json`
@@ -19,32 +23,54 @@ module.exports = function Websocket(url, msg) {
      
     client.onopen = function() {
       console.log('WebSocket Client Connected')
-      res(client)
+      //res(client)
     }
 
     client.onclose = function(close) {
       console.log('echo-protocol Connection Closed',close)
     }
 
-    client.onmessage = function(e) {
-      console.log('received message:',e)
+    client.onmessage = async function(e) {
       if(e.type === 'message') {
         const data = JSON.parse(e.data)
         console.log(data)
-        let payload = null
 
         switch(data.op) {
           case 10:
             seq = data.s
-            payload = Opcode.opcode1(seq)
+            hearbeatInterval = data.d.heartbeat_interval
+
+            
             if(!op1IntervalID) {
+              
               console.log('opcode interval created')
               op1IntervalID = setInterval(function() {
                 console.log('sending heartbeat with seq:',seq)
-                client.send(Opcode.opcode1(seq))
-              }, data.d.heartbeat_interval - 3000)
+                /*
+                if(!lastHeartbeat) {
+                  console.log('clearing interval:',op1IntervalID)
+                  client.close(4000,`Didn't receive opcode 11 in between heartbeats`)
+                  
+                  clearInterval(op1IntervalID)
+                  rej(`Didn't receive opcode 11 in between heartbeats`)
+
+                  return
+                }
+                */
+                client.send(opcode.opcode1(seq))
+                lastHeartbeat = false
+              }, data.d.heartbeat_interval)
+              client.send(opcode.opcode1(seq))
+              const payload = await opcode.opcode2()
+
+              console.log('opcode2:', payload)
+              client.send(payload)
               break
             }
+          case 11:
+            //websocket is still connected
+            lastHeartbeat = true
+            console.log('received opcode 11 hearbeat')
         }
       }
     }

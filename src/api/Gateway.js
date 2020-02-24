@@ -1,5 +1,7 @@
 import axios from 'axios'
 
-export default function getGateway() {
-  axios.get('http://localhost:5001/getGateway')
+export default async function getGateway() {
+  const { data } = await axios.get('http://localhost:5001/refreshGateway')
+
+  return data
 }

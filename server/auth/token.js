@@ -4,25 +4,32 @@ const config = require('../../config.json')
 const createXHR = require('../../src/helpers/xhr')
 const differenceInSeconds = require('date-fns/differenceInSeconds')
 const rax = require('retry-axios')
+const getAccessTokenFromDB = require('../database/getAccessToken')
 
 module.exports = (app, db) => {
-  app.get('/getToken', (req, res) => {
-    console.log('getToken')
+  app.get('/getAccessTokenFromDB', async(req, res) => {
+
+    const { accessCode } = await getAccessTokenFromDB(db)
+    res.json(accessCode)
+  })
+
+  app.get('/getAccessToken', (req, res) => {
+    console.log('getAccessToken')
 
     try { 
-      getToken(req.query.code).then(res => {
+      getAccessToken(req.query.code).then(({data}) => {
         console.log('finished getting access token')
-        console.log(res.data)
+        console.log(data)
         //get access codes. if 0, insert, if found, check if expire date has passed to fetch a new one
         db.collection('AccessCodes').countDocuments({})
           .then(count => {
             console.log('count',count)
             if(!count) {
               db.collection('AccessCodes').insertOne({
-                accessCode: res.data.access_token,
+                accessCode: data.access_token,
                 createdAt: new Date(),
-                expiresIn: res.data.expires_in,
-                refreshToken: res.data.refresh_token
+                expiresIn: data.expires_in,
+                refreshToken: data.refresh_token
               })
             }
             else {
@@ -42,16 +49,16 @@ module.exports = (app, db) => {
   })
 }
 
-function getToken(code) {
+function getAccessToken(code) {
   const xhr = createXHR()
   xhr.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
-  console.log('getToken')
+  console.log('getAccessToken')
   const obj = {
     client_id: config.clientID,
     client_secret: config.clientSecret,
     grant_type: 'authorization_code',
     code,
-    redirect_uri: 'http://localhost:5001/getToken',
+    redirect_uri: 'http://localhost:5001/getAccessToken',
     scope: 'identify guilds'
   }
 
@@ -91,7 +98,7 @@ function fetchNewCode({
     client_secret: config.clientSecret,
     grant_type: 'refresh_token',
     refresh_token: refreshToken,
-    redirect_uri: 'http://localhost:5001/getToken',
+    redirect_uri: 'http://localhost:5001/getAccessToken',
     scope: 'identify guilds'
   }
 

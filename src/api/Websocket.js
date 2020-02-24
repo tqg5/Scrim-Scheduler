@@ -1,15 +1,10 @@
 import axios from 'axios'
-import Websocket from '../models/Websocket'
 
-export default function getWebsocket() {
-  axios.get('http://localhost:5001/getGateway')
-    .then(res => {
-      console.log('websocket:',res.data.url)
-      const ws = Websocket(res.data.url, 'test')
-        /*
-      ws.clientProm.then(client => {
-        client.send('test')
-      })
-      */
-    })
+export default async function createWebsocket() {
+    try {
+        await axios.get('http://localhost:5001/createWebsocket')
+    }
+    catch(e) {
+        console.log('in catch of Websocket api:',e)
+    }
 }
